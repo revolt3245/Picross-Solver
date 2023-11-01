@@ -1,8 +1,7 @@
 # Picross Solver
 
 ## Requirement
----
-MATLAB2023a
+- MATLAB2023a
 
 ## How to execute
 만약 흑백 피크로스 솔버를 이용하고 싶으시다면 `BnW_Picross` 폴더 안에 있는 `bnw_picross_solver`폴더로 이동해 주시면 됩니다.
@@ -57,3 +56,6 @@ col_clue 1
 ...
 col_clue n_col
 ```
+
+## Demo Video
+<iframe width="560" height="315" src="https://www.youtube.com/embed/0G2ZuZMgCYM?si=FmI7smbw1M7GHaOH" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
