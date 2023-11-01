@@ -58,4 +58,7 @@ col_clue n_col
 ```
 
 ## Demo Video
-<iframe width="560" height="315" src="https://www.youtube.com/embed/0G2ZuZMgCYM?si=FmI7smbw1M7GHaOH" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+- 흑백 피크로스
+<img width="100%" src="Image/BnW Picross Demo.gif"/>
+- 컬러 피크로스
+<img width="100%" src="Image/Color Picross Demo.gif"/>
