@@ -59,6 +59,6 @@ col_clue n_col
 
 ## Demo Video
 - 흑백 피크로스
-<img width="100%" src="Image/BnW Picross Demo.gif"/>
+    <img width="100%" src="Image/BnW Picross Demo.gif"/>
 - 컬러 피크로스
-<img width="100%" src="Image/Color Picross Demo.gif"/>
+    <img width="100%" src="Image/Color Picross Demo.gif"/>
