@@ -61,4 +61,12 @@ row_clue n_row
 col_clue 1
 ...
 col_clue n_col
+
+row_color 1
+...
+row_color n_row
+
+col_color 1
+...
+col_color n_col
 ```
