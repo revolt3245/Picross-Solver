@@ -46,6 +46,20 @@ while ~Util.check_all_complete(param, state)
         else
         end
     else
+        line_nums = Util.find_imcomplete_line(param, state);
+
+        min_ind = 0;
+        for i=1:size(line_nums, 1)
+            ind = line_nums(i);
+
+            if ind <= param.n_row
+                n_lines = Util.get_possible_lines_memo(n_col, param.row_const{ind});
+            else
+                n_lines = Util.get_possible_lines_memo(n_row, param.col_const{ind-param.n_row});
+            end
+
+            if n_lines
+        end
         break;
     end
     disp(Util.check_all_complete(param, state))
