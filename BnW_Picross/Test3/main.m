@@ -4,7 +4,7 @@ clear; clc; close;
 fig = figure(Name="picross");
 ax = gca;
 
-param = Parameter.get_parameter(file="samples/15/sample2.txt", ...
+param = Parameter.get_parameter(file="test.txt", ...
     save_video=false);
 state = State.get_initial_state(param);
 graphics = Draw.initialize(fig, ax, 0.5, param);
@@ -33,23 +33,16 @@ if param.save_video
     writeVideo(graphics.video, frame);
 end
 %% solving
-stack_line_num = [];
-stack_line = [];
-stack_ind = 0;
 
-while ~Util.check_all_complete(param, state)
-    [state_nxt, flag] = Solver.branch_solver(param, state, graphics);
+state.tick = tic;
+[state, flag] = Solver.branch_solver(param, state, graphics);
 
-    if ~flag
-        if stack_ind == 0
-            disp("Cannot be solvable");
-        else
-        end
-    else
-        break;
-    end
-    disp(Util.check_all_complete(param, state))
+if ~flag
+    disp("Cannot be solvable");
+elseif ~Util.check_all_complete(param, state)
+    [state, flag] = Solver.backtrack_solver(param, state, graphics);
 end
+
 if param.save_video
     graphics.video.close;
 end

@@ -1,29 +1,12 @@
 function [state, flag] = branch_solver(param, state, graphics)
 %% solving
-n_lines = zeros(1, param.n_row + param.n_col);
-bounds = [ones(1, param.n_row+param.n_col)
-    param.n_col*ones(1,param.n_row) param.n_row*ones(1,param.n_col)
-    ones(1, param.n_row+param.n_col)
-    zeros(1, param.n_row + param.n_col)];
-
-for i = 1:(param.n_col + param.n_row)
-    if i <= param.n_row
-        n_lines(i) = Util.get_possible_lines_memo(param.n_col, param.row_const{i});
-        bounds(4, i) = size(param.row_const{i}, 2);
-    else
-        n_lines(i) = Util.get_possible_lines_memo(param.n_row, param.col_const{i-param.n_row});
-        bounds(4, i) = size(param.col_const{i-param.n_row}, 2);
-    end
-end
-
 is_in_queue = true(1, param.n_row + param.n_col);
 
-[pq_lines, pq_ind] = sort(n_lines, 2);
+[pq_lines, pq_ind] = sort(state.n_lines, 2);
 pq = [pq_lines
     pq_ind
-    bounds(:, pq_ind)];
+    state.bounds(:, pq_ind)];
 
-tic;
 while any(is_in_queue)
     %% pop minimum line
     pq_top = pq(:,1);
@@ -44,7 +27,7 @@ while any(is_in_queue)
 
         if(any(o_line == 0))
             flag = false;
-            break;
+            return;
         end
 
         changed = o_line ~= i_line;
@@ -55,9 +38,9 @@ while any(is_in_queue)
             new_ind = 1:(param.n_row+param.n_col);
             new_ind = new_ind(has_to_push);
 
-            new_n_lines = n_lines(has_to_push);
+            new_n_lines = state.n_lines(has_to_push);
 
-            pq = [pq [new_n_lines; new_ind; bounds(:, new_ind)]];
+            pq = [pq [new_n_lines; new_ind; state.bounds(:, new_ind)]];
 
             [~, pq_ind] = sort(pq(1,:));
             pq = pq(1:end,pq_ind);
@@ -69,12 +52,12 @@ while any(is_in_queue)
         state.board(ind_top,gl_bound:gh_bound) = o_line;
 
         %% bound n_lines update
-        new_gl_bound = bounds(1, ind_top) + find(o_line == uint8(3), 1, 'first')-1;
-        new_gh_bound = bounds(1, ind_top) + find(o_line == uint8(3), 1, 'last')-1;
+        new_gl_bound = state.bounds(1, ind_top) + find(o_line == uint8(3), 1, 'first')-1;
+        new_gh_bound = state.bounds(1, ind_top) + find(o_line == uint8(3), 1, 'last')-1;
 
         if ~isempty(new_gl_bound) && ~isempty(new_gh_bound)
-            bounds(1, ind_top) = new_gl_bound;
-            bounds(2, ind_top) = new_gh_bound;
+            state.bounds(1, ind_top) = new_gl_bound;
+            state.bounds(2, ind_top) = new_gh_bound;
 
             if new_gl_bound ~= gl_bound && ~isempty(new_gl_bound)
                 o_line_l = o_line(1:(new_gl_bound-gl_bound));
@@ -83,7 +66,7 @@ while any(is_in_queue)
                 check_l = [o_line_l(1) == 2 check_l];
 
                 new_cl_bound = cl_bound + sum(check_l);
-                bounds(3, ind_top) = new_cl_bound;
+                state.bounds(3, ind_top) = new_cl_bound;
 
                 state.row_const{ind_top}(1:new_cl_bound-1) = false;
             end
@@ -96,16 +79,16 @@ while any(is_in_queue)
 
                 new_ch_bound = ch_bound - sum(check_h);
 
-                bounds(4, ind_top) = new_ch_bound;
+                state.bounds(4, ind_top) = new_ch_bound;
 
                 state.row_const{ind_top}(new_ch_bound+1:end) = false;
             end
 
-            s_lines = bounds(2, ind_top) - bounds(1, ind_top)+1;
-            s_clues = bounds(4, ind_top) - bounds(3, ind_top)+1;
+            s_lines = state.bounds(2, ind_top) - state.bounds(1, ind_top)+1;
+            s_clues = state.bounds(4, ind_top) - state.bounds(3, ind_top)+1;
 
             new_clues = param.row_const{ind_top}(state.row_const{ind_top});
-            n_lines(ind_top) = Util.get_possible_lines(s_lines, new_clues);
+            state.n_lines(ind_top) = Util.get_possible_lines(s_lines, new_clues);
         else
             state.row_const{ind_top}(:) = false;
         end
@@ -116,7 +99,7 @@ while any(is_in_queue)
         
         if(any(o_line == 0))
             flag = false;
-            break;
+            return;
         end
 
         changed = o_line ~= i_line;
@@ -130,9 +113,9 @@ while any(is_in_queue)
             new_ind = 1:(param.n_row+param.n_col);
             new_ind = new_ind(has_to_push);
 
-            new_n_lines = n_lines(has_to_push);
+            new_n_lines = state.n_lines(has_to_push);
 
-            pq = [pq [new_n_lines; new_ind; bounds(:, new_ind)]];
+            pq = [pq [new_n_lines; new_ind; state.bounds(:, new_ind)]];
 
             [pq_lines, pq_ind] = sort(pq(1,:));
             pq = pq(:,pq_ind);
@@ -148,8 +131,8 @@ while any(is_in_queue)
         new_gh_bound = gl_bound + find(o_line == uint8(3), 1, 'last')-1;
 
         if ~isempty(new_gl_bound) && ~isempty(new_gh_bound)
-            bounds(1, ind_top) = new_gl_bound;
-            bounds(2, ind_top) = new_gh_bound;
+            state.bounds(1, ind_top) = new_gl_bound;
+            state.bounds(2, ind_top) = new_gh_bound;
 
             if new_gl_bound ~= gl_bound && ~isempty(new_gl_bound)
                 o_line_l = o_line(1:(new_gl_bound-gl_bound));
@@ -159,7 +142,7 @@ while any(is_in_queue)
                     check_l];
 
                 new_cl_bound = cl_bound + sum(check_l);
-                bounds(3, ind_top) = new_cl_bound;
+                state.bounds(3, ind_top) = new_cl_bound;
 
                 state.col_const{ind_top-param.n_row}(1:new_cl_bound-1) = false;
             end
@@ -173,19 +156,19 @@ while any(is_in_queue)
 
                 new_ch_bound = ch_bound - sum(check_h);
 
-                bounds(4, ind_top) = new_ch_bound;
+                state.bounds(4, ind_top) = new_ch_bound;
                 state.col_const{ind_top-param.n_row}(new_ch_bound+1:end) = false;
             end
 
-            s_lines = bounds(2, ind_top) - bounds(1, ind_top)+1;
-            s_clues = bounds(4, ind_top) - bounds(3, ind_top)+1;
+            s_lines = state.bounds(2, ind_top) - state.bounds(1, ind_top)+1;
+            s_clues = state.bounds(4, ind_top) - state.bounds(3, ind_top)+1;
             new_clues = param.col_const{ind_top-param.n_row}(state.col_const{ind_top-param.n_row});
-            n_lines(ind_top) = Util.get_possible_lines(s_lines, new_clues);
+            state.n_lines(ind_top) = Util.get_possible_lines(s_lines, new_clues);
         else
             state.col_const{ind_top-param.n_row}(:)=false;
         end
     end
-    state.time = toc;
+    state.time = toc(state.tick);
 
     Draw.update(graphics, state, param);
     drawnow;

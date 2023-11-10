@@ -1,0 +1,49 @@
+function [state, flag] = backtrack_solver(param, state, graphics)
+%% find minimum line
+line_num = 0;
+min_n_line = inf;
+for i = 1:(param.n_row + param.n_col)
+    if i <= param.n_row
+        if(any(state.row_const{i}) && (min_n_line > state.n_lines(i)))
+            min_n_line = state.n_lines(i);
+            line_num = i;
+        end
+    else
+        if (any(state.col_const{i-param.n_row}) && (min_n_line > state.n_lines(i)))
+            min_n_line = state.n_lines(i);
+            line_num = i;
+        end
+    end
+end
+
+%% solver
+gl_bound = state.bounds(1, line_num);
+gh_bound = state.bounds(2, line_num);
+cl_bound = state.bounds(3, line_num);
+ch_bound = state.bounds(4, line_num);
+state_temp = state;
+if cl_bound == ch_bound
+    line_width = gh_bound - gl_bound + 1;
+    first_clue = param.row_const{line_num}(cl_bound);
+    upper_bound = line_width - first_clue;
+
+    for i=1:upper_bound
+        if i == 1
+            t_line = ones(1, line_width, 'uint8');
+            t_line(1:first_clue) = uint8(3);
+        else
+            t_line(i-1) = 1;
+            t_line(i+first_clue-1) = 3;
+        end
+
+        state_temp.board(line_num, gl_bound:gh_bound) = t_line;
+        [state_temp, flag] = Solver.branch_solver(param, state_temp, graphics);
+
+        if ~flag
+            state_temp = state;
+        end
+        
+    end
+else
+end
+end
