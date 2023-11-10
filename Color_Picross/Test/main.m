@@ -4,10 +4,10 @@ clear; clc; close;
 fig = figure(Name="picross");
 ax = gca;
 
-param = Parameter.get_parameter(file="samples\50_50\1.txt", ...
-    save_video=true);
+param = Parameter.get_parameter(file="samples\80_80\rick_astley.txt", ...
+    save_video=false);
 state = State.get_initial_state(param);
-graphics = Draw.initialize(fig, ax, 0.5, param);
+graphics = Draw.initialize(fig, ax, 0.25, param);
 
 %% video setting
 if param.save_video
@@ -100,8 +100,9 @@ while any(is_in_queue)
         cond = true(1, size(o_line, 2));
 
         for i = 0:param.n_color
-            cond = cond & (o_line ~= bitshift(uint8(1), i));
+            cond = cond & (o_line ~= bitshift(uint32(1), i));
         end
+
         new_gl_bound = bounds(1, ind_top) + find(cond, 1, 'first')-1;
         new_gh_bound = bounds(1, ind_top) + find(cond, 1, 'last')-1;
 
@@ -112,8 +113,6 @@ while any(is_in_queue)
             if new_gl_bound ~= gl_bound && ~isempty(new_gl_bound)
                 o_line_l = o_line(1:(new_gl_bound-gl_bound));
 
-                %check_l = (o_line_l(2:end) == 2) & (o_line_l(1:end-1) == 1);
-                %check_l = [o_line_l(1) == 2 check_l];
                 check_l = (o_line_l(2:end) ~= o_line_l(1:end-1)) & (o_line_l(2:end) ~= 1);
                 check_l = [o_line_l(1) ~= 1 check_l];
 
@@ -126,8 +125,6 @@ while any(is_in_queue)
             if new_gh_bound ~= gh_bound
                 o_line_h = o_line(end-gh_bound+(new_gh_bound+1):end);
 
-                %check_h = (o_line_h(2:end) == 1) & (o_line_h(1:end-1) == 2);
-                %check_h = [check_h o_line_h(end) == 2];
                 check_h = (o_line_h(2:end) ~= o_line_h(1:end-1)) & (o_line_h(1:end-1) ~= 1);
                 check_h = [check_h o_line_h(end) ~= 1];
 
@@ -179,7 +176,7 @@ while any(is_in_queue)
         cond = true(size(o_line, 1), 1);
 
         for i = 0:param.n_color
-            cond = cond & (o_line ~= bitshift(uint8(1), i));
+            cond = cond & (o_line ~= bitshift(uint32(1), i));
         end
 
         new_gl_bound = gl_bound + find(cond, 1, 'first')-1;
@@ -242,4 +239,5 @@ end
 
 if param.save_video
     video.close;
+    saveas(gcf, "final"+t_string + ".png");
 end

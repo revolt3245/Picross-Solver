@@ -46,39 +46,23 @@ graphics.xsign.YData = x_sign(2,:);
 [~, col_maxlength] = Util.get_longest_length(param.col_const);
 [~, row_maxlength] = Util.get_longest_length(param.row_const);
 for i = 1:param.n_row
-    Color = zeros(row_maxlength, 3);
+    Alpha = zeros(row_maxlength, 1);
 
     s_row = size(param.row_const{i}, 2);
-    state_clue_aug = [true(1, row_maxlength-s_row) state.row_const{i}];
-    color_clue_aug = [zeros(1, row_maxlength-s_row) param.row_const{i}(2,:)];
+    state_clue_aug = [false(1, row_maxlength-s_row) state.row_const{i}];
+    Alpha(state_clue_aug) = 1;
 
-    for j = 1:param.n_color
-        Color(color_clue_aug == j, 1) = param.color_map(j, 1);
-        Color(color_clue_aug == j, 2) = param.color_map(j, 2);
-        Color(color_clue_aug == j, 3) = param.color_map(j, 3);
-    end
-    
-    Color(~state_clue_aug, :) = (Color(~state_clue_aug, :)*0.3 + [0 0 0]*0.7);
-
-    graphics.row_const.CData(i,:,:) = Color;
+    graphics.row_const.AlphaData(i,:,:) = Alpha;
 end
 
 for i=1:param.n_col
-    Color = zeros(col_maxlength, 3);
+    Alpha = zeros(col_maxlength, 1);
 
     s_col = size(param.col_const{i}, 2);
-    state_clue_aug = [true(1, col_maxlength-s_col) state.col_const{i}];
-    color_clue_aug = [zeros(1, col_maxlength-s_col) param.col_const{i}(2,:)];
+    state_clue_aug = [false(1, col_maxlength-s_col) state.col_const{i}];
+    Alpha(state_clue_aug) = 1;
 
-    for j = 1:param.n_color
-        Color(color_clue_aug == j, 1) = param.color_map(j, 1);
-        Color(color_clue_aug == j, 2) = param.color_map(j, 2);
-        Color(color_clue_aug == j, 3) = param.color_map(j, 3);
-    end
-
-    Color(~state_clue_aug, :) = (Color(~state_clue_aug, :)*0.3 + [0 0 0]*0.7);
-
-    graphics.col_const.CData(:,i,:) = Color;
+    graphics.col_const.AlphaData(:,i,:) = Alpha;
 end
 %% times
 graphics.clock.String = sprintf("%03.2f", state.time);
