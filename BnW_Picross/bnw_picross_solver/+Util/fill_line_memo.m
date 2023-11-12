@@ -31,6 +31,8 @@ if s_clues == 1
     end
 
     o_line = memo(1,:);
+elseif s_clues == 0
+    o_line = ones(1, s_line, 'uint8');
 else
     [~, memo(:, clues(1)+2:end)] = Util.fill_line_memo(i_line(clues(1)+2:end), clues(2:end), memo(:, clues(1)+2:end));
     for i=1:upper_bound

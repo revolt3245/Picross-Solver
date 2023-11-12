@@ -30,7 +30,11 @@ for i=1:out_param.n_row
         r_const = sscanf(fline, "%d");
     end
 
-    out_param.row_const{i, 1} = r_const';
+    if r_const == 0
+        out_param.row_const{i, 1} = [];
+    else
+        out_param.row_const{i, 1} = r_const';
+    end
 end
 
 for i=1:out_param.n_col
@@ -40,7 +44,12 @@ for i=1:out_param.n_col
 
         c_const = sscanf(fline, "%d");
     end
-    out_param.col_const{i, 1} = c_const';
+
+    if c_const == 0
+        out_param.col_const{i, 1} = [];
+    else
+        out_param.col_const{i, 1} = c_const';
+    end
 end
 fclose(fid);
 end

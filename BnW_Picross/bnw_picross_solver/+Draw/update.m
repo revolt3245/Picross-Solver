@@ -32,8 +32,8 @@ graphics.xsign.XData = x_sign(1,:);
 graphics.xsign.YData = x_sign(2,:);
 
 %% clues
-[col_lmat, col_maxlength] = Util.get_longest_length(param.col_const);
-[row_lmat, row_maxlength] = Util.get_longest_length(param.row_const);
+[~, col_maxlength] = Util.get_longest_length(param.col_const);
+[~, row_maxlength] = Util.get_longest_length(param.row_const);
 for i = 1:param.n_row
     Color = zeros(row_maxlength, 3);
 
