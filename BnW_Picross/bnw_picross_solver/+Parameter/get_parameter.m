@@ -4,6 +4,7 @@ arguments
 
     %% setting
     in_param.save_video (1,1) logical = true;
+    in_param.save_figure (1,1) logical = true;
 end
 %% parameter
 out_param = in_param;
