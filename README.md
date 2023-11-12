@@ -1,36 +1,31 @@
 # Picross Solver
 
 ## Demo Video
-- 흑백 피크로스
+- Black and White (B&W) Picross
     <img width="100%" src="Image/BnW Picross Demo.gif"/>
-- 컬러 피크로스
+- Color Picross
     <img width="100%" src="Image/Color Picross Demo.gif"/>
 
 ## Requirement
 - MATLAB2023a
 
 ## How to execute
-만약 흑백 피크로스 솔버를 이용하고 싶으시다면 `BnW_Picross` 폴더 안에 있는 `bnw_picross_solver`폴더로 이동해 주시면 됩니다.
-
+To execute the B&W Picross solver, you should change the workspace location to `matlab/BnW_Picross/bnw_picross_solver` and run `main.m`.
 ```matlab
-cd BnW_Picross/bnw_picross_solver
+>> cd matlab/BnW_Picross/bnw_picross_solver
+
+>> main
 ```
 
-그런 다음 `main.m`을 동작시켜주면 됩니다.
+To execute the Color Picross solver, you should change the workspace location to `matlab/Color_Picross/color_picross_solver` and run `main.m`.
 ```matlab
-main
-```
+>> cd matlab/Color_Picross/color_picross_solver
 
-만약 컬러 피크로스 솔버를 이용하고 싶으시다면 `Color_Picross` 폴더 안에 있는 `Test`폴더로 이동하시면 됩니다. 그리고 `main.m`을 동작시켜주면 됩니다.
-```matlab
-cd Color_Picross/Test
-
-main
+>> main
 ```
 
 ## Custom Picross
-흑백 피크로스를 커스텀으로 하고 싶으시다면 먼저 다음 format에 맞추어 `.txt`파일을 생성해 주시면 됩니다.
-
+If you want to solve a custom puzzle using B&W Picross solver, first create a `<location>/<name>.txt` file in the following format. The keyword `<location>` represents the folder that puzzle data file is located, and `<name>` means the name of the data file.
 ```
 n_row n_col
 
@@ -42,11 +37,19 @@ col_clue 1
 ...
 col_clue n_col
 ```
+The parameters `n_row` and `n_col` mean the the number of rows and columns, respectively. The parameter `row_clue i` means the clue of `i`-th row, and `col_clue i` means the clue of `i`-th column. 
 
-그런 다음 `main.m` 내의 `Parameter.get_parameter`의 인수 중 `file=` 옆에 앞서 생성한 파일 이름을 작성해 주시면 됩니다.
+Then substitute `<location>/<name>.txt` to the keyword argument `file` of the function `Parameter.get_parameter` in the file `main.m`
+```matlab
+param = Parameter.get_parameter(file="<location>/<name>.txt")
+```
 
-참고로 컬러 피크로스의 format은 다음과 같습니다.
+Finally, execute `main.m`
+```matlab
+>> main
+```
 
+If you want to solve a custom puzzle using Color Picross solver, first create a `<location>/<name>.txt` file in the following format. The keyword `<location>` represents the folder that puzzle data file is located, and `<name>` means the name of the data file.
 ```
 n_row n_col n_color
 
@@ -70,3 +73,4 @@ col_color 1
 ...
 col_color n_col
 ```
+The parameter `n_color` represents the number of colors used in the picross. The parameter `color i` means the `i`-th color used in the picross. The parameters `row_color i`, `col_color i` represent the color indices response to `row_clue i`, `col_clue i`, respectively.
