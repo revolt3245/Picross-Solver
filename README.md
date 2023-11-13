@@ -73,5 +73,7 @@ col_color n_col
 ```
 The parameter `n_color` represents the number of colors used in the picross. The parameter `color i` means the `i`-th color used in the picross. The parameters `row_color i`, `col_color i` represent the color indices response to `row_clue i`, `col_clue i`, respectively.
 
+<!--
 ## Webpage
 The webpage for picross solver and picross game is [here](https://revolt3245.github.io/Picross-Solver/web/index.html)
+-->
