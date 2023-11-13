@@ -1,5 +1,4 @@
 # Picross Solver
-
 ## Demo Video
 - Black and White (B&W) Picross
     <img width="100%" src="Image/BnW Picross Demo.gif"/>
@@ -8,7 +7,6 @@
 
 ## Requirement
 - MATLAB2023a
-
 ## How to execute
 To execute the B&W Picross solver, you should change the workspace location to `matlab/BnW_Picross/bnw_picross_solver` and run `main.m`.
 ```matlab
